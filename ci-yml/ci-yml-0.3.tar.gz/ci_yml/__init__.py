@@ -1,0 +1,51 @@
+# -*- coding: utf-8 -*-
+
+import subprocess
+import yaml
+import sys
+import os
+
+
+def run_subtree(arr_elems, ignore_errors=False, env_extra=None):
+
+    #setup env
+    env = os.environ
+    env.update(env_extra)
+
+    # run commands
+    for elem in arr_elems:
+        print " * " + elem # print back command...
+        try:
+            subprocess.check_call(elem, shell=True, env=env)
+        except subprocess.CalledProcessError as e:
+            if ignore_errors:
+                pass
+            else:
+                raise e
+
+
+# TODO add a lot of error checks
+def main():
+    env = {}
+
+    stream = open(".ci.yml", "r")
+    ops = yaml.load(stream)
+
+    if ops.has_key('envs'):
+        for key in ops['envs']:
+            upper_key = key.upper()
+            value = os.path.expandvars(ops['envs'][key])
+            env.update({ upper_key: value })
+
+    print env
+    if ops.has_key('prepare'):
+        run_subtree(ops['prepare'], ignore_errors=True , env_extra=env)
+
+    if ops.has_key('jobs'):
+        for arg in sys.argv[1:]:
+            if arg in ops['jobs']:
+                env.update({'CI_YML_JOB': arg})
+                run_subtree(ops['jobs'][arg], env_extra=env)
+
+    if ops.has_key('deploy') and 'deploy' in sys.argv[1:]:
+        run_subtree(ops['deploy'], env_extra=env)
