@@ -1,0 +1,9 @@
+from rambutan3.check_args.base.RRestrictedInstanceMatcher import RRestrictedInstanceMatcher
+
+
+def RESTRICTED_INSTANCE_OF(*,
+                           allowed_class_or_type_tuple: tuple,
+                           not_allowed_class_or_type_tuple: tuple) -> RRestrictedInstanceMatcher:
+    x = RRestrictedInstanceMatcher(allowed_class_or_type_tuple=allowed_class_or_type_tuple,
+                                   not_allowed_class_or_type_tuple=not_allowed_class_or_type_tuple)
+    return x
