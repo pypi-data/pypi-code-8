@@ -1,0 +1,2 @@
+class Missed(Exception):
+    pass
