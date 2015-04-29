@@ -1,0 +1,10 @@
+__version__ = "0.6.38"
+__git_commiter_name__ = "Arnon Yaari"
+__git_commiter_email__ = "arnony@infinidat.com"
+__git_branch__ = 'develop'
+__git_remote_tracking_branch__ = 'origin/develop'
+__git_remote_url__ = 'git@git.infinidat.com:host-opensource/infi.projector.git'
+__git_head_hash__ = '030ee86c5793743d4fe859732678ce7fe6e9256f'
+__git_head_subject__ = 'tiny fix in readme'
+__git_head_message__ = ''
+__git_dirty_diff__ = ''
