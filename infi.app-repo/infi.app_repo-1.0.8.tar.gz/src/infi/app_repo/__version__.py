@@ -1,0 +1,10 @@
+__version__ = "1.0.8"
+__git_commiter_name__ = "Guy Rozendorn"
+__git_commiter_email__ = "guy@rzn.co.il"
+__git_branch__ = 'develop'
+__git_remote_tracking_branch__ = 'origin/develop'
+__git_remote_url__ = 'git@git.infinidat.com:host-opensource/infi.app_repo.git'
+__git_head_hash__ = '7395f1d6fca3ef8e5193483ae1a6d7bc31011ec0'
+__git_head_subject__ = 'Finished release v1.0.8.'
+__git_head_message__ = '* release/v1.0.8: (23 commits)\n  APR-21 implemented package cleanup as well\n  TRIVIAL refactoring delete_packages\n  TRIVIAL refactoring delete_packages\n  TRIVIAL fixing SyntaxError\n  TRIVIAL PrettyIndexer.rebuild_index: ignore releases with no distributions\n  APR-22 docopt-completion eapp_repo\n  APR-21 s/cleanup/delete\n  APR-22 fixing _install_upstart_job\n  APR-22 eapp_repo script in production\n  APR-22 app_repo and eapp_repo scripts\n  APR-21 fixing PrettyIndexer.iter_files\n  APR-19 fixing ova indexers\n  APR-21 more cleanup improvements/fixes\n  APR-21 uncommenting the delete\n  APR-21 more appropiate usage\n  APR-21 app_repo package_cleanup WIP\n  APR-19 fixing ova indexers\n  TRIVIAIL upgrade must re-write the index file in apt repos\n  APR-19 extracing zip files into the ova updates repository\n  TRIVIAL msiexec /passive /norestart\n  ...'
+__git_dirty_diff__ = ''
