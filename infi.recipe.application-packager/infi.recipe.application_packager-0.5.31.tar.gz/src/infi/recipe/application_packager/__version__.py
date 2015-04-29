@@ -1,0 +1,10 @@
+__version__ = "0.5.31"
+__git_commiter_name__ = "Guy Rozendorn"
+__git_commiter_email__ = "guy@rzn.co.il"
+__git_branch__ = 'develop'
+__git_remote_tracking_branch__ = 'origin/develop'
+__git_remote_url__ = 'git@git.infinidat.com:host-opensource/infi.recipe.application_packager.git'
+__git_head_hash__ = '96ceb0334b8452946dd0cffa12145a6301d555cd'
+__git_head_subject__ = 'Finished release v0.5.31.'
+__git_head_message__ = '* release/v0.5.31: (27 commits)\n  buildout.cfg: changed isolated python version to v2.7.8.2\n  buildout.cfg: adding infi.winver to requirements\n  HOSTDEV-1984 use SHA256 where possible\n  HOSTDEV-2075 fixing 32-bit rpm\n  HOSTDEV-2075 fixing the tests\n  HOSTDEV-2075 using a separate variable target_arch so I could still build rpm package on 64bit but make the pre-install script think it is 32bit\n  HOSTDEV-2075 removing X86_package_on_X64_machine from RpmTestCase for now until I find of a different way to hack it\n  HOSTDEV-2075 using a different install file in X86_package_on_X64_machine\n  HOSTDEV-2075 fixing SyntaxError\n  HOSTDEV-2075 unit test for this scenario\n  HOSTDEV-2075 fixing ubuntu\n  HOSTDEV-2075 adding preinst.in to package data\n  HOSTDEV-2075 forgot calling test\n  HOSTDEV-2075 fix for rpm\n  HOSTDEV-2075 fix for ubuntu\n  MANIFEST.in: adding .*bash to package data\n  buildout.cfg: adding .*bash to package data\n  TRIVIAL Solaris pkg-related package-data\n  bump psutil\n  bump psutil\n  ...'
+__git_dirty_diff__ = ''
