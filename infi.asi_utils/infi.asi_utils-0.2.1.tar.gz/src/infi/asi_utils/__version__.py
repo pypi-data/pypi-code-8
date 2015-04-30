@@ -1,0 +1,11 @@
+__version__ = "0.2.1"
+__git_commiter_name__ = "Guy Rozendorn"
+__git_commiter_email__ = "guy@rzn.co.il"
+__git_branch__ = '(detached from v0.2.1)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = '0088b9da8e084de375377e94b2ac925257518cdb'
+__git_head_subject__ = 'Finished release v0.2.1.'
+__git_head_message__ = '* release/v0.2.1: (27 commits)\n  TRIVIAL refactoring raw\n  support AIX\n  - STORAGEMODEL-330 better outputs (custom output for luns) - scsi error handling - handle field values properly\n  - STORAGEMODEL-330 better outputs (finish custom output for readcap) - refactor output modes - support json output\n  STORAGEMODEL-330 better outputs (custom output for readcap)\n  STORAGEMODEL-330 better outputs\n  STORAGEMODEL-330 refactorign\n  STORAGEMODEL-329 solaris executer -- WIP\n  STORAGEMODEL-328 bump commit for build with new asi\n  STORAGEMODEL-325\n  STORAGEMODEL-326 hexlifying logical_block_address in output\n  STORAGEMODEL-327 print exceptions to stderr, not stdout\n  handling asi exceptions\n  fixing yield of sg_raw write commands\n  get_sg_from_sd\n  STORAGEMODEL-316 fixing data buffer\n  STORAGEMODEL-316 support for write commands in asi-utils raw\n  STORAGEMODEL-321 triggering new build\n  STORAGEMODEL-321 triggering new build\n  very basic error handling\n  ...'
+__git_dirty_diff__ = ''
+__git_commit_date__ = '2015-04-30 18:05:02'
