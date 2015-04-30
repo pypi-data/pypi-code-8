@@ -1,0 +1,10 @@
+__version__ = "1.0.9"
+__git_commiter_name__ = "Guy Rozendorn"
+__git_commiter_email__ = "guy@rzn.co.il"
+__git_branch__ = '(detached from v1.0.9)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = '7e7d3f105cd3e376a14f2e4a856084296bf80763'
+__git_head_subject__ = 'Finished release v1.0.9.'
+__git_head_message__ = '* release/v1.0.9:\n  TRIVIAL freeze commit\n  TRIVIAL fixing pretty_print\n  TRIVIAL fixing build_regex_predicate\n  TRIVIAL fixing rpc_client\n  TRIVIAL fixing logging'
+__git_dirty_diff__ = ''
