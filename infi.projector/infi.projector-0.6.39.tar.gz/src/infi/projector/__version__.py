@@ -1,0 +1,10 @@
+__version__ = "0.6.39"
+__git_commiter_name__ = "Guy Rozendorn"
+__git_commiter_email__ = "guy@rzn.co.il"
+__git_branch__ = 'develop'
+__git_remote_tracking_branch__ = 'origin/develop'
+__git_remote_url__ = 'git@git.infinidat.com:host-opensource/infi.projector.git'
+__git_head_hash__ = '30756c66308098043393f633b850bd2ce34eb588'
+__git_head_subject__ = 'RequirementsPlugin: fixing --strip-suffix-from-post-releases'
+__git_head_message__ = ''
+__git_dirty_diff__ = ''
