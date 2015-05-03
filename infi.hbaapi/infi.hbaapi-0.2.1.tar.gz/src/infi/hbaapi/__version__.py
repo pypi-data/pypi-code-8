@@ -1,0 +1,10 @@
+__version__ = "0.2.1"
+__git_commiter_name__ = "Guy Rozendorn"
+__git_commiter_email__ = "guy@rzn.co.il"
+__git_branch__ = '(detached from v0.2.1)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = '6dbfe86d4d9bea995878ccc466c039467b80a094'
+__git_head_subject__ = 'Finished release v0.2.1.'
+__git_head_message__ = '* release/v0.2.1:\n  STORAGEMODEL-338 fix for ac1f6f6\n  merge solaris and aix target hacks\n  add hbaapi_aix.c to package data\n  add .projector file to only upload sdist (eggs may not have the correct binary modules)\n  fix get_ports\n  STORAGEMODEL-338 use the wwn as the host indicator'
+__git_dirty_diff__ = ''
