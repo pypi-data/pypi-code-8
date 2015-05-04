@@ -1,0 +1,12 @@
+ms_encoding    = 'utf-8'
+ms_port        = '8009'
+ms_host        = 'localhost'
+ms_root        = './'
+ms_debug       = True
+ms_reloader    = True
+html_extension = '.html'
+markdown_root  = 'markdownserver/resources/markdown/'
+html_root      = 'markdownserver/resources/html/'
+css_root       = 'markdownserver/resources/css/'
+css_name       = 'github.css'
+markdown_type  = 'gfm'
