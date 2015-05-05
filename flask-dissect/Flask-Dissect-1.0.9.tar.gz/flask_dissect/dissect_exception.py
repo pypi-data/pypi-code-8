@@ -1,0 +1,2 @@
+class DissectException(Exception):
+    pass
