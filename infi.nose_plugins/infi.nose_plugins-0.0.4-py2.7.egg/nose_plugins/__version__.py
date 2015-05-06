@@ -1,0 +1,10 @@
+__version__ = "0.0.4"
+__git_commiter_name__ = "Arnon Yaari"
+__git_commiter_email__ = "arnony@infinidat.com"
+__git_branch__ = '(detached from v0.0.4)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = '736cddd0a719d565802470e6ba96a8309ccf866b'
+__git_head_subject__ = 'Revert "buildout.cfg: adding lxml to requirements"'
+__git_head_message__ = 'This reverts commit 999a80aa0cf41699188d6af6002e428aed829cc2.'
+__git_dirty_diff__ = ''
