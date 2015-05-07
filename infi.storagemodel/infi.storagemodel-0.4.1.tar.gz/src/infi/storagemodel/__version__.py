@@ -1,0 +1,10 @@
+__version__ = "0.4.1"
+__git_commiter_name__ = "Arnon Yaari"
+__git_commiter_email__ = "arnony@infinidat.com"
+__git_branch__ = '(detached from v0.4.1)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = '3fcf9dcccc89fb3136492e0a884a98d830c0e03b'
+__git_head_subject__ = "VSSPROV-87 don't return the same device twice"
+__git_head_message__ = ''
+__git_dirty_diff__ = ''
