@@ -1,0 +1,2 @@
+from cmsplugin_latest.logger_setup import LOGGING
+import logging
