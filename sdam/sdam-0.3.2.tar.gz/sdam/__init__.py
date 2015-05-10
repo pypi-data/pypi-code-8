@@ -1,0 +1,1 @@
+from sdam import main
