@@ -1,0 +1,10 @@
+__version__ = "0.1.11"
+__git_commiter_name__ = "Arnon Yaari"
+__git_commiter_email__ = "arnony@infinidat.com"
+__git_branch__ = '(detached from v0.1.11)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = 'ae33cd5bb282f4a12e90fdf785ad03fbc4e4e204'
+__git_head_subject__ = 'HPTVM-770 exception.message may be another exception - wrap with str'
+__git_head_message__ = ''
+__git_dirty_diff__ = ''
