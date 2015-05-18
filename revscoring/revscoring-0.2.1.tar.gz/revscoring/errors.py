@@ -1,0 +1,2 @@
+class RevisionDocumentNotFound(Exception):
+    pass
