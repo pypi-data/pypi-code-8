@@ -1,0 +1,48 @@
+import os
+import sys
+from setuptools import setup, find_packages
+
+from test_plus import VERSION
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'test_project.settings'
+
+# Add test_plus to Python path
+BASE_DIR = os.path.dirname(__file__)
+sys.path.insert(0, os.path.join(BASE_DIR, 'test_project'))
+
+try:
+    from pypandoc import convert
+    read_md = lambda f: convert(f, 'rst')
+except ImportError:
+    print("Warning: pypandoc not found, will not convert README markdown to RST")
+    read_md = lambda f: open(f, 'r').read()
+
+
+setup(
+    name='django-test-plus',
+    version=".".join(map(str, VERSION)),
+    description="django-test-plus provides useful additions to Django's default TestCase",
+    long_description=read_md('README.md'),
+    author='Frank Wiles',
+    author_email='frank@revsys.com',
+    url='https://github.com/revsys/django-test-plus/',
+    include_package_data=True,
+    packages=find_packages(),
+    zip_safe=False,
+    install_requires=['Django>=1.4.20'],
+    tests_require=[
+        'Django>=1.4.20',
+        'factory-boy>=2.5.2',
+    ],
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Web Environment',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
+        'Framework :: Django',
+    ],
+    test_suite='runtests.runtests'
+)
