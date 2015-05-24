@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+GRADES_FILENAME = 'grades.csv'
+GRADING_SLASH_DELIMINATOR = '/'
+SUBMISSIONS_FILENAME = 'Submissions'
+GRADING_URL_EXTENSION = '&action=grading'
+SUBMISSION_LISTING_DELIMINATOR = '-_submission_-'
+
+GRADING_BLANK_GRADE = '-'
+GRADING_HEADER_NAME = 'Name'
+GRADING_HEADER_EMAIL = 'Email'
+GRADING_HEADER_GRADE = 'Grade'
