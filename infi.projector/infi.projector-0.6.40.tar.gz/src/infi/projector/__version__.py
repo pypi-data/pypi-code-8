@@ -1,0 +1,10 @@
+__version__ = "0.6.40"
+__git_commiter_name__ = "Arnon Yaari"
+__git_commiter_email__ = "arnony@infinidat.com"
+__git_branch__ = '(detached from v0.6.40)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = '93f7a50d82eee60f8fa9dc279d3133788275de3c'
+__git_head_subject__ = 'remove pdb'
+__git_head_message__ = ''
+__git_dirty_diff__ = ''
