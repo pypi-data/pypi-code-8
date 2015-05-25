@@ -1,0 +1,11 @@
+__version__ = "0.2.2"
+__git_commiter_name__ = "Arnon Yaari"
+__git_commiter_email__ = "arnony@infinidat.com"
+__git_branch__ = '(detached from v0.2.2)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = '9a3e26ff6429ff8a39e94e6f71ea067552b3dada'
+__git_head_subject__ = 'HOSTDEV-2089 specify which scripts to install'
+__git_head_message__ = ''
+__git_dirty_diff__ = ''
+__git_commit_date__ = '2015-05-17 17:08:12'
