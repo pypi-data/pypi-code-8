@@ -1,0 +1,10 @@
+__version__ = "0.2.2"
+__git_commiter_name__ = "Arnon Yaari"
+__git_commiter_email__ = "arnony@infinidat.com"
+__git_branch__ = '(detached from v0.2.2)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = 'd72ebf6a8a87ba414e285a2bbfd02f6bba8e6a33'
+__git_head_subject__ = "silent greenlets are greenlets that raise unhandled exceptions through join but don't print those exceptions to stderr"
+__git_head_message__ = ''
+__git_dirty_diff__ = ''
