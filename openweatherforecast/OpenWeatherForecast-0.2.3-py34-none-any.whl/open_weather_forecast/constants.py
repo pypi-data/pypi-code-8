@@ -1,0 +1,22 @@
+RETRIES_LIMIT = 3
+
+# Configuration TTL in secs
+CFG_CACHE_TTL = 5
+
+# Configuration envar name that contains settings path
+CFG_FILE_PATH_ENV = "SALES_EPICENTER_CFG"
+CFG_FILE_PATH = "/etc/openweather/settings.yaml"
+
+# Log format
+LOGGING_FORMATTER = "%(asctime)s[%(levelname)s][%(target)s]%(message)s"
+
+WEATHER_INFORMATION_SCHEMA = {
+    "list": [{
+                 "main": {"temp": float,
+                          "temp_min": float,
+                          "temp_max": float
+                          },
+                 "dt_txt": str
+             }]
+}
+
