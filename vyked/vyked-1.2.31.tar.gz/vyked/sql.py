@@ -1,0 +1,269 @@
+from asyncio import coroutine
+from functools import wraps
+from enum import Enum
+
+from aiopg import create_pool, Pool, Cursor
+import psycopg2
+
+_CursorType = Enum('CursorType', 'PLAIN, DICT, NAMEDTUPLE')
+
+
+class PostgresStore:
+    _pool = None
+    _connection_params = {}
+    _insert_string = "insert into {} ({}) values ({}) returning *;"
+    _update_string = "update {} set ({}) = ({}) where ({});"
+    _select_all_string_with_condition = "select * from {} where ({}) order by {} limit {} offset {};"
+    _select_all_string = "select * from {} order by {} limit {} offset {};"
+    _select_selective_column = "select {} from {} order by {} limit {} offset {};"
+    _select_selective_column_with_condition = "select {} from {} where ({}) order by {} limit {} offset {};"
+    _delete_query = "delete from {} where ({})"
+
+    @classmethod
+    def connect(cls, database:str, user:str, password:str, host:str, port:int):
+        """
+        Sets connection parameters
+        """
+        cls._connection_params['database'] = database
+        cls._connection_params['user'] = user
+        cls._connection_params['password'] = password
+        cls._connection_params['host'] = host
+        cls._connection_params['port'] = port
+
+    @classmethod
+    def use_pool(cls, pool:Pool):
+        """
+        Sets an existing connection pool instead of using connect() to make one
+        """
+        cls._pool = pool
+
+    @classmethod
+    @coroutine
+    def get_pool(cls) -> Pool:
+        """
+        Yields:
+            existing db connection pool
+        """
+        if len(cls._connection_params) < 5:
+            raise ConnectionError('Please call SQLStore.connect before calling this method')
+        if not cls._pool:
+            cls._pool = yield from create_pool(**cls._connection_params)
+        return cls._pool
+
+    @classmethod
+    @coroutine
+    def get_cursor(cls, cursor_type=_CursorType.PLAIN) -> Cursor:
+        """
+        Yields:
+            new client-side cursor from existing db connection pool
+        """
+        pool = yield from cls.get_pool()
+        if cursor_type == _CursorType.PLAIN:
+            c = yield from pool.cursor()
+            return c
+        if cursor_type == _CursorType.NAMEDTUPLE:
+            return (yield from pool.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor))
+        if cursor_type == _CursorType.DICT:
+            return (yield from pool.cursor(cursor_factory=psycopg2.extras.DictCursor))
+
+    @classmethod
+    def make_insert_query(cls, table:str, values:dict):
+        """
+        Creates an insert statement with only chosen fields
+
+        Args:
+            table: a string indicating the name of the table
+            values: a dict of fields and values to be inserted
+
+        Returns:
+            query: a SQL string with
+            values: a tuple of values to replace placeholder(%s) tokens in query
+
+        """
+        keys = ', '.join(values.keys())
+        value_place_holder = ' %s,' * len(values)
+        query = cls._insert_string.format(table, keys, value_place_holder[:-1])
+        return query, tuple(values.values())
+
+    @classmethod
+    def make_update_query(cls, table: str, values: dict, where_keys: list) -> tuple:
+        """
+        Creates an update query with only chosen fields
+        Supports only a single field where clause
+
+        Args:
+            table: a string indicating the name of the table
+            values: a dict of fields and values to be inserted
+            where_keys: list of dictionary
+            example of where keys: [{'name':('>', 'cip'),'url':('=', 'cip.com'},{'type':{'<=', 'manufacturer'}}]
+            where_clause will look like ((name>%s and url=%s) or (type <= %s))
+            multiple dictionary gets converted to or clause and elements of sam dictionary in and clause
+
+        Returns:
+            query: a SQL string with
+            values: a tuple of values to replace placeholder(%s) tokens in query - except the where clause value
+
+        """
+        keys = ', '.join(values.keys())
+        value_place_holder = ' %s,' * len(values)
+        where_clause, where_values = cls._get_where_clause_with_values(where_keys)
+        query = cls._update_string.format(table, keys, value_place_holder[:-1], where_clause)
+        return query, (tuple(values.values()) + where_values)
+
+    @classmethod
+    def _get_where_clause_with_values(cls, where_keys):
+        vals = []
+
+        def make_and_query(ele: dict):
+            and_query = ' and '.join(['{} {} %s'.format(e[0], e[1][0]) for e in ele.items()])
+            vals.extend([val[1] for val in ele.values()])
+            return '(' + and_query + ')'
+
+        return ' or '.join(map(make_and_query, where_keys)), tuple(vals)
+
+    @classmethod
+    def make_delete_query(cls, table: str, where_keys: list):
+        """
+        Creates a delete query with where keys
+        Supports multiple where clause with and or or both
+
+        Args:
+            table: a string indicating the name of the table
+            where_keys: list of dictionary
+            example of where keys: [{'name':('>', 'cip'),'url':('=', 'cip.com'},{'type':{'<=', 'manufacturer'}}]
+            where_clause will look like ((name>%s and url=%s) or (type <= %s))
+            multiple dictionary gets converted to or clause and elements of sam dictionary in and clause
+
+        Returns:
+            query: a SQL string with
+            values: a tuple of values to replace placeholder(%s)
+
+        """
+        where_clause, values = cls._get_where_clause_with_values(where_keys)
+        query = cls._delete_query.format(table, where_clause)
+        return query, values
+
+    @classmethod
+    def make_select_query(cls, table: str, order_by: str, columns: list=None, where_keys: list=None, limit=100,
+                          offset=0):
+        """
+        Creates a select query for selective columns with where keys
+        Supports multiple where claus with and or or both
+
+        Args:
+            table: a string indicating the name of the table
+            order_by: a string indicating column name to order the results on
+            columns: list of columns to select from
+            where_keys: list of dictionary
+            example of where keys: [{'name':('>', 'cip'),'url':('=', 'cip.com'},{'type':{'<=', 'manufacturer'}}]
+            where_clause will look like ((name>%s and url=%s) or (type <= %s))
+            limit: the limit on the number of results
+            offset: offset on the results
+            multiple dictionary gets converted to or clause and elements of sam dictionary in and clause
+
+        Returns:
+            query: a SQL string with
+            values: a tuple of values to replace placeholder(%s)
+
+        """
+        if columns is not None:
+            columns_string = ", ".join(columns)
+            if where_keys is not None:
+                where_clause, values = cls._get_where_clause_with_values(where_keys)
+                query = cls._select_selective_column_with_condition.format(columns_string, table, where_clause,
+                                                                           order_by, limit, offset)
+                return query, values
+            else:
+                query = cls._select_selective_column.format(columns_string, table, order_by, limit, offset)
+                return query, ()
+        else:
+            if where_keys is not None:
+                where_clause, values = cls._get_where_clause_with_values(where_keys)
+                query = cls._select_all_string_with_condition.format(table, where_clause, order_by, limit, offset)
+                return query, values
+            else:
+                query = cls._select_all_string.format(table, order_by, limit, offset)
+                return query, ()
+
+def page(func):
+    @wraps(func)
+    def wrapper(cls, *args, **kwargs):
+        if 'offset' not in kwargs:
+            kwargs['offset'] = 0
+        limit = kwargs.get('limit', 100)
+
+        with (yield from cls.get_cursor()) as c:
+            while c.rowcount == -1 or c.rowcount == limit:
+                query, values = func(cls, *args, **kwargs)
+                yield from c.execute(query, values)
+                yield (yield from c.fetchall()) #TODO: also return total_count
+                kwargs['offset'] += limit
+    return wrapper
+
+
+
+def cursor(func):
+    """
+    Decorator that provides a cursor to the calling function
+
+    Adds the cursor as the second argument to the calling functions
+
+    Requires that the function being decorated is an instance of a class or object
+    that yields a cursor from a get_cursor() coroutine or provides such an object
+    as the first argument in its signature
+
+    Yields:
+        A client-side cursor
+    """
+
+    @wraps(func)
+    def wrapper(cls, *args, **kwargs):
+        with (yield from cls.get_cursor()) as c:
+            return (yield from func(cls, c, *args, **kwargs))
+
+    return wrapper
+
+
+
+def dict_cursor(func):
+    """
+    Decorator that provides a dictionary cursor to the calling function
+
+    Adds the cursor as the second argument to the calling functions
+
+    Requires that the function being decorated is an instance of a class or object
+    that yields a cursor from a get_cursor(cursor_type=CursorType.DICT) coroutine or provides such an object
+    as the first argument in its signature
+
+    Yields:
+        A client-side dictionary cursor
+    """
+
+    @wraps(func)
+    def wrapper(cls, *args, **kwargs):
+        with (yield from cls.get_cursor(_CursorType.DICT)) as c:
+            return (yield from func(cls, c, *args, **kwargs))
+
+    return wrapper
+
+
+def nt_cursor(func):
+    """
+    Decorator that provides a namedtuple cursor to the calling function
+
+    Adds the cursor as the second argument to the calling functions
+
+    Requires that the function being decorated is an instance of a class or object
+    that yields a cursor from a get_cursor(cursor_type=CursorType.NAMEDTUPLE) coroutine or provides such an object
+    as the first argument in its signature
+
+    Yields:
+        A client-side namedtuple cursor
+    """
+
+    @wraps(func)
+    def wrapper(cls, *args, **kwargs):
+        with (yield from cls.get_cursor(_CursorType.NAMEDTUPLE)) as c:
+            return (yield from func(cls, c, *args, **kwargs))
+
+    return wrapper
