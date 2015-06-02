@@ -1,0 +1,10 @@
+__version__ = "0.3.2"
+__git_commiter_name__ = "Guy Rozendorn"
+__git_commiter_email__ = "guy@rzn.co.il"
+__git_branch__ = '(HEAD detached at v0.3.2)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = '33f61e7992b82c617086b80e08aae61a6fc63075'
+__git_head_subject__ = 'Finished release v0.3.2.'
+__git_head_message__ = '* release/v0.3.2:\n  HOSTDEV-2134 docstring\n  HOSTDEV-2134 fixing creating issues in projects w/o versions and components\n  HOSTDEV-2134 support for passing additional fields to create issue\n  HOSTDEV-2135 workaround for JIRA.__del__\n  jish project <x> does not work when there is no next unreleased version'
+__git_dirty_diff__ = ''
