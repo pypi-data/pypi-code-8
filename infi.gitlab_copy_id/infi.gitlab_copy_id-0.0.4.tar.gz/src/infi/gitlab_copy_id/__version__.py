@@ -1,0 +1,11 @@
+__version__ = "0.0.4"
+__git_commiter_name__ = "Guy Rozendorn"
+__git_commiter_email__ = "guy@rzn.co.il"
+__git_branch__ = '(HEAD detached at v0.0.4)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = '796bb7d3e46ecef27e1186d9419d7786a4f83bec'
+__git_head_subject__ = 'TRIVIAL adding a print'
+__git_head_message__ = ''
+__git_dirty_diff__ = ''
+__git_commit_date__ = '2015-06-04 15:07:49'
