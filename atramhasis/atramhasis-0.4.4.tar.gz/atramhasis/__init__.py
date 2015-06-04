@@ -1,0 +1,37 @@
+from pyramid.config import Configurator
+
+from atramhasis.renderers import json_renderer_verbose
+
+
+def includeme(config):
+    """this function adds some configuration for the application"""
+    config.include('pyramid_jinja2')
+    config.include('pyramid_tm')
+    config.add_static_view('static', 'static', cache_max_age=3600)
+    config.add_renderer('csv', 'atramhasis.renderers.CSVRenderer')
+    config.add_renderer('skosrenderer_verbose', json_renderer_verbose)
+    # Rewrite urls with trailing slash
+    config.include('pyramid_rewrite')
+    config.include('atramhasis.routes')
+    config.include('pyramid_skosprovider')
+    config.scan('pyramid_skosprovider')
+
+    config.scan()
+
+
+def main(global_config, **settings):
+    """ This function returns a Pyramid WSGI application.
+    """
+    config = Configurator(settings=settings)
+    includeme(config)
+
+    config.add_translation_dirs('atramhasis:locale/')
+
+    config.include('atramhasis.data:db')
+
+    # if standalone include skos sample data
+    test_mode = settings.get('atramhasis.test_mode')
+    if not test_mode == 'true':  # pragma: no cover
+        config.include('.skos')
+
+    return config.make_wsgi_app()
