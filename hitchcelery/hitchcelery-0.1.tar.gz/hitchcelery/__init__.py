@@ -1,0 +1,1 @@
+from celery_service import CeleryService
