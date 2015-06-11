@@ -1,0 +1,10 @@
+__version__ = "1.0.12"
+__git_commiter_name__ = "Guy Rozendorn"
+__git_commiter_email__ = "guy@rzn.co.il"
+__git_branch__ = '(HEAD detached at v1.0.12)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = 'bcb5f0705e82f3d976d3e55377b1be848bd1124d'
+__git_head_subject__ = 'Finished release v1.0.12.'
+__git_head_message__ = '* release/v1.0.12:\n  TRIVIAL adding support for package-x.y.z.bX\n  APR-30 generic custom packages\n  APR-31 sudo si missing\n  APR-29 CORS'
+__git_dirty_diff__ = ''
