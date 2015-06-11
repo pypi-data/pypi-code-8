@@ -1,0 +1,10 @@
+__version__ = "0.4.3"
+__git_commiter_name__ = "Shai Keren"
+__git_commiter_email__ = "shaik@infinidat.com"
+__git_branch__ = '(detached from v0.4.3)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = 'b1f010cd219322d612d740289f63fc51494e3f72'
+__git_head_subject__ = 'COMVE-98 moved executers from asi-utils to asi'
+__git_head_message__ = ''
+__git_dirty_diff__ = ''
