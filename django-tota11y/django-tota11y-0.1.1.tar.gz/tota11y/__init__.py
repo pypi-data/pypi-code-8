@@ -1,0 +1,5 @@
+__author__ = "Dmitry Kozhedubov"
+__email__ = "hiisi13@gmail.com"
+__version__ = "0.1.1"
+__copyright__ = "Copyright (C) 2015 Dmitry Kozhedubov"
+__license__ = "MIT License"
