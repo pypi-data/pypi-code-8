@@ -1,0 +1,23 @@
+__author__ = 'mnowotka'
+
+from chembl_migration_model.models import Assays as Assays
+from chembl_migration_model.models import Activities as Activities
+from chembl_migration_model.models import MoleculeDictionary as MoleculeDictionary
+from chembl_core_model.models import CompoundMols as CompoundMols
+from chembl_migration_model.models import MoleculeHierarchy as MoleculeHierarchy
+from chembl_migration_model.models import TargetDictionary as TargetDictionary
+from chembl_migration_model.models import CellDictionary as CellDictionary
+from chembl_migration_model.models import CompoundProperties as CompoundProperties
+from chembl_migration_model.models import CompoundRecords as CompoundRecords
+from chembl_migration_model.models import CompoundStructures as CompoundStructures
+from chembl_migration_model.models import Products as Products
+from chembl_migration_model.models import ProteinClassification as ProteinClassification
+from chembl_migration_model.models import BioComponentSequences as BioComponentSequences
+from chembl_migration_model.models import Biotherapeutics
+from chembl_migration_model.models import Docs as Docs
+from chembl_migration_model.models import ComponentSequences as ComponentSequences
+from chembl_migration_model.models import TargetDictionary as TargetDictionary
+from chembl_migration_model.models import TargetComponents as TargetComponents
+from chembl_migration_model.models import UsanStems as UsanStems
+from chembl_migration_model.models import DrugMechanism as DrugMechanism
+from chembl_migration_model.models import ProductPatents as ProductPatents
