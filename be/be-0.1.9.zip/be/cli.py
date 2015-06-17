@@ -1,0 +1,479 @@
+"""be - Minimal Asset Management System
+
+Usage:
+    $ be project/item/type
+
+Errors:
+    PROJECT ERROR: Project has been misconfigured
+    TEMPLATE ERROR: A template has been misconfigured
+
+"""
+
+import os
+import sys
+import time
+import getpass
+import tempfile
+import subprocess
+
+import _format
+import _extern
+import lib
+
+from version import version
+from vendor import click
+
+self = type("Scope", (object,), {})()
+self.isactive = lambda: "BE_ACTIVE" in os.environ
+self.verbose = False
+
+
+@click.group()
+@click.option("-v", "--verbose", is_flag=True)
+def main(verbose):
+    """be {0} - Minimal Directory and Environment Management System
+
+    be initialises a context-sensitive environment for
+    your project. Use "new" to start a new project, followed
+    by "in" to enter it. A directory structure will have been
+    setup for you in accordance with a project-specific file
+    "templates.yaml" for any particular item you request,
+    e.g. "peter".
+
+    See help for each subcommand for more information and
+    http://github.com/mottosso/be/wiki for documentation.
+
+    \b
+    Usage:
+        $ be new ad --name spiderman
+        "spiderman" created.
+        $ be ls
+        - spiderman
+        $ be in spiderman/shot1/animation
+        $ be dump
+        BE_PROJECT=spiderman
+        BE_ITEM=peter
+        BE_TASK=model
+
+    \b
+    Environment:
+        BE_PROJECT (str): Name of current project
+        BE_ITEM (str): Name of current item
+        BE_TYPE (str): Family of current item
+        BE_DEVELOPMENTDIR (str): Absolute path to current development directory
+        BE_PROJECTROOT (str): Absolute path to current project
+        BE_PROJECTSROOT (str): Absolute path to where projects are located
+        BE_ACTIVE (bool): In an active environment
+
+    """
+
+    self.verbose = verbose
+    _extern.verbose = verbose
+
+main.help = main.help.format(version)
+
+
+@click.command()
+@click.argument("context")
+@click.option("-y", "--yes", is_flag=True,
+              help="Automatically accept any questions")
+@click.option("-a", "--as", "as_", default=getpass.getuser(),
+              help="Enter project as a different user")
+@click.option("-e", "--enter", is_flag=True,
+              help="Change the current working "
+                   "directory to development directory")
+@click.pass_context
+def in_(ctx, context, yes, as_, enter):
+    """Set the current context to `context`
+
+    \b
+    Usage:
+        $ be in project/item/type
+
+    """
+
+    if self.isactive():
+        lib.echo("Error: Exit current project first")
+        sys.exit(1)
+
+    try:
+        project, item, type = str(context).split("/")
+    except:
+        sys.stderr.write("Invalid syntax, the format is project/item/type")
+        sys.exit(1)
+
+    project_dir = _format.project_dir(_extern.cwd(), project)
+    if not os.path.exists(project_dir):
+        lib.echo("Project \"%s\" not found. " % project)
+        lib.echo("\nAvailable:")
+        ctx.invoke(ls)
+        sys.exit(1)
+
+    templates = _extern.load_templates(project)
+    inventory = _extern.load_inventory(project)
+    settings = _extern.load_settings(project)
+
+    development_dir = _format.development_directory(
+        templates, inventory, project, item, type, as_)
+    if not os.path.exists(development_dir):
+        create = False
+        if yes:
+            create = True
+        else:
+            sys.stdout.write("No development directory found. Create? [Y/n]: ")
+            if raw_input().lower() in ("", "y", "yes"):
+                create = True
+        if create:
+            os.makedirs(development_dir)
+        else:
+            sys.stdout.write("Cancelled")
+            sys.exit(0)
+
+    dirname = os.path.dirname(__file__)
+    if os.name == "nt":
+        shell = os.path.join(dirname, "_shell.bat")
+    else:
+        shell = os.path.join(dirname, "_shell.sh")
+
+    tempdir = (tempfile.mkdtemp()
+               if "BE_TEMPDIR" not in os.environ
+               else os.environ["BE_TEMPDIR"])
+
+    env = dict(os.environ, **{
+        "BE_PROJECT": project,
+        "BE_ITEM": item,
+        "BE_TYPE": type,
+        "BE_DEVELOPMENTDIR": development_dir,
+        "BE_PROJECTROOT": os.path.join(
+            _extern.cwd(), project).replace("\\", "/"),
+        "BE_PROJECTSROOT": _extern.cwd(),
+        "BE_ACTIVE": "True",
+        "BE_USER": str(as_),
+        "BE_SCRIPT": "",
+        "BE_PYTHON": "",
+        "BE_ENTER": "1" if enter else "",
+        "BE_TEMPDIR": tempdir,
+    })
+
+    # Parse be.yaml
+    if "script" in settings:
+        env["BE_SCRIPT"] = _extern.write_script(settings["script"], tempdir)
+
+    if "python" in settings:
+        script = ";".join(settings["python"])
+        env["BE_PYTHON"] = script
+        try:
+            exec(script, {"__name__": __name__})
+        except Exception as e:
+            lib.echo("Error: %s" % e)
+
+    # Create aliases
+    cd_alias = ("cd %BE_DEVELOPMENTDIR%"
+                if os.name == "nt" else "cd $BE_DEVELOPMENTDIR")
+
+    aliases = settings.get("alias", {})
+    aliases["home"] = cd_alias
+    aliases_dir = _extern.write_aliases(aliases, tempdir)
+
+    env["PATH"] = aliases_dir + os.pathsep + env.get("PATH", "")
+    env["BE_ALIASDIR"] = aliases_dir
+
+    for map_source, map_dest in settings.get("redirect", {}).items():
+        env[map_dest] = env[map_source]
+
+    if "BE_TESTING" in os.environ:
+        os.chdir(development_dir)
+        os.environ.update(env)
+        return
+
+    try:
+        sys.exit(subprocess.call(shell, shell=True, env=env))
+    finally:
+        import shutil
+        shutil.rmtree(tempdir)
+
+
+@click.command()
+@click.argument("preset")
+@click.option("--name", help="Name of your new project")
+@click.option("--silent", is_flag=True,
+              help="Print only errors")
+@click.option("--update", "-U", is_flag=True,
+              help="Update preset to latest version before creating")
+def new(preset, name, silent, update):
+    """Create new default preset
+
+    \b
+    Usage:
+        $ be new ad
+        "blue_unicorn" created
+        $ be new film --name spiderman
+        "spiderman" created
+
+    """
+
+    if self.isactive():
+        lib.echo("Please exit current preset before starting a new")
+        sys.exit(1)
+
+    if not name:
+        count = 0
+        name = lib.random_name()
+        while name in _extern.projects():
+            if count > 10:
+                lib.echo("Error: Couldn't come up with a unique name :(")
+                sys.exit(1)
+            name = lib.random_name()
+            count += 1
+
+    new_dir = _format.project_dir(_extern.cwd(), name)
+    if os.path.exists(new_dir):
+        lib.echo("\"%s\" already exists" % name)
+        sys.exit(1)
+
+    presets_dir = _extern.presets_dir()
+    preset_dir = os.path.join(presets_dir, preset)
+
+    try:
+        if not update and preset in _extern.local_presets():
+            _extern.copy_preset(preset_dir, new_dir)
+
+        else:
+            lib.echo("Finding preset for \"%s\".. " % preset, silent)
+            time.sleep(1 if silent else 0)
+
+            if "/" not in preset:
+                # Preset is relative, look it up from the Hub
+                presets = _extern.github_presets()
+
+                if preset not in presets:
+                    sys.stdout.write("\"%s\" not found" % preset)
+                    sys.exit(1)
+
+                time.sleep(1 if silent else 0)
+                repository = presets[preset]
+
+            else:
+                # Absolute paths are pulled directly
+                repository = preset
+
+            repository = _extern.fetch_release(repository)
+            lib.echo("Pulling %s.. " % repository, silent)
+
+            try:
+                _extern.pull_preset(repository, preset_dir)
+            except IOError as e:
+                lib.echo(e)
+                sys.exit(1)
+
+            _extern.copy_preset(preset_dir, new_dir)
+
+    except IOError:
+        lib.echo("ERROR: Could not write, do you have permission?")
+        sys.exit(1)
+
+    lib.echo("\"%s\" created" % name, silent)
+
+
+@click.command()
+@click.argument("preset")
+@click.option("--clean", is_flag=True)
+def update(preset, clean):
+    """Update a local preset
+
+    This command will cause `be` to pull a preset already
+    available locally.
+
+    \b
+    Usage:
+        $ be update ad
+        Updating "ad"..
+
+    """
+
+    if self.isactive():
+        lib.echo("Error: Exit current project first")
+        sys.exit(1)
+
+    presets = _extern.github_presets()
+
+    if preset not in presets:
+        sys.stdout.write("\"%s\" not found" % preset)
+        sys.exit(1)
+
+    lib.echo("Are you sure you want to update \"%s\", "
+             "any changes will be lost?: [y/N]: ", newline=False)
+    if raw_input().lower() in ("y", "yes"):
+        presets_dir = _extern.presets_dir()
+        preset_dir = os.path.join(presets_dir, preset)
+
+        repository = presets[preset]
+
+        if clean:
+            try:
+                _extern.remove_preset()
+            except:
+                lib.echo("Error: Could not clean existing preset")
+                sys.exit(1)
+
+        lib.echo("Updating %s.. " % repository)
+
+        try:
+            _extern.pull_preset(repository, preset_dir)
+        except IOError as e:
+            lib.echo(e)
+            sys.exit(1)
+
+    else:
+        lib.echo("Cancelled")
+
+
+@click.command()
+def ls():
+    """List contents of current context
+
+    \b
+    Usage:
+        $ be ls
+        - peter
+        - maryjane
+
+    """
+
+    if self.isactive():
+        lib.echo("Error: Exit current project first")
+        sys.exit(1)
+
+    projects = list()
+    for project in os.listdir(_extern.cwd()):
+        abspath = os.path.join(_extern.cwd(), project)
+        if not lib.isproject(abspath):
+            continue
+        projects.append(project)
+
+    if not projects:
+        lib.echo("Empty")
+        sys.exit(0)
+
+    for project in sorted(projects):
+        lib.echo("- %s" % project)
+    sys.exit(0)
+
+
+@click.group()
+def preset():
+    """Create, manipulate and query presets"""
+
+
+@click.command()
+@click.option("--remote", is_flag=True, help="List remote presets")
+def preset_ls(remote):
+    """List presets
+
+    \b
+    Usage:
+        $ be preset ls
+        - ad
+        - game
+        - film
+
+    """
+
+    if self.isactive():
+        lib.echo("Error: Exit current project first")
+        sys.exit(1)
+
+    if remote:
+        presets = _extern.github_presets()
+    else:
+        presets = _extern.local_presets()
+
+    if not presets:
+        lib.echo("No presets found")
+        sys.exit(0)
+    for preset in sorted(presets):
+        lib.echo("- %s" % preset)
+    sys.exit(0)
+
+
+@click.command()
+@click.argument("query")
+def preset_find(query):
+    """Find preset from hub
+
+    \b
+    $ be find mypreset
+    https://github.com/mottosso/be-mypreset.git
+
+    """
+
+    if self.isactive():
+        lib.echo("Error: Exit current project first")
+        sys.exit(1)
+
+    found = _extern.github_presets().get(query)
+    if found:
+        lib.echo(found)
+    else:
+        lib.echo("Unable to locate preset \"%s\"" % query)
+
+
+@click.command()
+def dump():
+    """Print current environment
+
+    \b
+    Usage:
+        $ be dump
+        BE_PROJECT=spiderman
+        BE_ITEM=peter
+        BE_TYPE=model
+        ...
+
+    """
+
+    if not self.isactive():
+        lib.echo("Error: Enter a project first")
+        sys.exit(1)
+
+    for key in sorted(os.environ):
+        if not key.startswith("BE_"):
+            continue
+        lib.echo("%s=%s" % (key, os.environ.get(key)))
+
+    project = os.environ["BE_PROJECT"]
+    root = os.environ["BE_PROJECTSROOT"]
+    settings = _extern.load(project, "be", optional=True, root=root)
+    environ = settings.get("redirect", {}).items()
+    for map_source, map_dest in sorted(environ):
+        lib.echo("%s=%s" % (map_dest, os.environ.get(map_dest)))
+
+    sys.exit(0)
+
+
+@click.command()
+def what():
+    """Print current context"""
+
+    if not self.isactive():
+        lib.echo("Error: Enter a project first")
+        sys.exit(1)
+
+    sys.stdout.write("{}/{}/{}".format(*(
+        os.environ.get(k, "")
+        for k in ("BE_PROJECT", "BE_ITEM", "BE_TYPE"))))
+
+
+main.add_command(in_, name="in")
+main.add_command(new)
+main.add_command(ls)
+main.add_command(dump)
+main.add_command(what, name="?")
+main.add_command(update)
+main.add_command(preset)
+preset.add_command(preset_ls, name="ls")
+preset.add_command(preset_find, name="find")
+
+
+if __name__ == '__main__':
+    main()
