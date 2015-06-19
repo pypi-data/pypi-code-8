@@ -1,0 +1,1 @@
+default_app_config = 'django-wfs.apps.WFSConfig'
