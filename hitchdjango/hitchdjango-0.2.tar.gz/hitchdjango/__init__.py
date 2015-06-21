@@ -1,0 +1,1 @@
+from hitchdjango.django_service import DjangoService
