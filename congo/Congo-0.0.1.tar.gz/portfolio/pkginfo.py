@@ -1,0 +1,5 @@
+NAME = "Portfolio"
+VERSION = "0.0.3"
+AUTHOR = "Mardix"
+LICENSE = "MIT"
+COPYRIGHT = "(c) 2015 Mardix"
