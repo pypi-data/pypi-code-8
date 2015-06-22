@@ -1,0 +1,1 @@
+from hitchcelery.celery_service import CeleryService
