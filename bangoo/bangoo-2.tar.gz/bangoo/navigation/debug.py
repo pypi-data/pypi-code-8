@@ -1,0 +1,4 @@
+
+
+class WrongMenuFormatException(Exception):
+    pass
