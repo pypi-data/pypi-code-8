@@ -1,0 +1,3 @@
+
+class IMJFException(Exception):
+    pass
