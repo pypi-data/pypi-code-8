@@ -1,0 +1,1 @@
+version_info={'date': u'Tue Jun 23 10:09:12 2015 +0200', 'tag': u'0.6.4', 'rev': u'c95f158fe90ae2d52ba7de6c5c9b5b74924ffa98'}
