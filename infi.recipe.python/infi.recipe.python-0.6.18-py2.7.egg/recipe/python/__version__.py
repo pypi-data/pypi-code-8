@@ -1,0 +1,10 @@
+__version__ = "0.6.18"
+__git_commiter_name__ = "Shai Keren"
+__git_commiter_email__ = "shaik@infinidat.com"
+__git_branch__ = '(detached from v0.6.18)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = '6706a7a8c476f724f2e9364182a6d8c2d7e31b42'
+__git_head_subject__ = 'Finished release v0.6.18.'
+__git_head_message__ = ''
+__git_dirty_diff__ = ''
