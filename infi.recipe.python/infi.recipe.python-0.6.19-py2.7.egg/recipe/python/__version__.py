@@ -1,0 +1,10 @@
+__version__ = "0.6.19"
+__git_commiter_name__ = "Shai Keren"
+__git_commiter_email__ = "shaik@infinidat.com"
+__git_branch__ = '(detached from v0.6.19)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = '73f6827af5afe2def4d2fad1046139934f8d41bd'
+__git_head_subject__ = 'HOSTDEV-2158 a fix for the last commit'
+__git_head_message__ = ''
+__git_dirty_diff__ = ''
