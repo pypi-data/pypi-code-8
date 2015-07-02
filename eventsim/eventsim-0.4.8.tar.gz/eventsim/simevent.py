@@ -1,0 +1,237 @@
+import random
+
+class randomsim():
+	def __init__(self, *args):
+	
+		self.stop, self.amount = 10, random.randint(2,20)
+		self._intarrival, self._service = [], []
+
+		if len(args) == 0:
+			[self._intarrival.append(random.randint(1, self.stop)) for i in range(self.amount)]	
+			[self._service.append(random.randint(1, self.stop)) for i in range(self.amount)]
+
+		elif len(args) == 1:
+			[self._intarrival.append(random.randint(1, self.stop)) for i in range(args[0])]	
+			[self._service.append(random.randint(1, self.stop)) for i in range(args[0])]
+
+		elif len(args) == 2:
+			[self._intarrival.append(random.randint(1, args[0])) for i in range(args[1])]	
+			[self._service.append(random.randint(1, args[0])) for i in range(args[1])]
+
+		elif len(args) == 3:
+			[self._intarrival.append(random.randint(1, args[0])) for i in range(args[2])]	
+			[self._service.append(random.randint(1, args[1])) for i in range(args[2])]
+
+		else:
+			raise ValueError("Arguments must be between 0 to 3")
+
+		self._intarrival[0] = 0
+
+		# Required variables
+		self._arrival, self._preservstart, self._servstart = [], [0], []
+		self._queue, self._servend, self._custspend, self._idle = [], [], [], [0]
+
+		def getarrive_(self):
+			'''Returns arrival time'''
+			increase = 0
+			for i in self._intarrival:
+				increase +=i
+				self._arrival.append(increase)
+			return self._arrival
+
+		def servbegins_(self):
+			'''Returns time when service begin'''
+			increase = 0
+			for i in range(len(self._service)):
+				increase += self._service[i]
+				self._preservstart.append(increase)
+			self._preservstart.pop()
+			return self._preservstart
+
+		def servstops_(self):
+			'''Returns time when service ends (not to be used)'''
+			z = 0
+			for x in self._preservstart:
+				for y in self._service:
+					z +=y
+					self._servend.append(z+x)
+			return self._servend
+
+		#Please maintain order if you are editing the code!
+		# Calling functions
+		getarrive_(self)	#Returns arrival time
+		servstops_(self)	#Returns time when service ends (not final result)
+		servbegins_(self)	#Returns time when servce begin
+
+		def get_servend_(self):
+			'''Retuns time when service ends'''
+			for x in range(len(self._preservstart)):
+				self._servend[x] = self._preservstart[x] + self._service[x]
+				s = 1
+				while s < len(self._preservstart):
+					if self._preservstart[s] < max(self._arrival[s], self._servend[x]):
+						self._preservstart[s] = max(self._arrival[s], self._servend[x])
+					s+=1 
+			return self._servend
+
+		# Method used to calculate the rest of the data like
+		#time when service begins
+		#wait time in queue, (_queue)
+		#time customer spent in the system (_custspend)
+		def otherresults(self, list1, list2, list3):
+			''' Stores and return the value of (list2 - list3) in list1 '''
+			for x in range(len(list2)):
+				list1.append(list2[x] - list3[x]) 
+			if list1[0] < 0:
+				list1[0] = 0
+
+		def idletime_(self):
+			'''Returns the idle time of server'''
+			x,y = 0,1
+			while y < len(self._servend):
+				(self._idle).append(self._servstart[y] - self._servend[x])
+				x+=1
+				y+=1
+			return self._idle
+
+		# Calling other methods
+		get_servend_(self)
+		otherresults(self, self._servstart, self._servend, self._service) 
+		otherresults(self, self._queue, self._servstart, self._arrival) 
+		otherresults(self, self._custspend, self._servend, self._arrival)
+		idletime_(self)
+
+	#Methods to be used outside of __init__ returning necessary values
+	#Main methods
+
+	def intarrival(self):
+		'''Returns the interarrival time'''
+		return self._intarrival
+
+	def arrival(self):
+		'''Returns the arrival time'''
+		return self._arrival
+
+	def service(self):
+		'''Returns the service time'''
+		return self._service
+
+	def servbegin(self):
+		'''Returns the time when service began'''
+		return self._servstart
+
+	def queuewait(self):
+		'''Returns the customer's waiting time in the queue'''
+		return self._queue
+
+	def servend(self):
+		'''Returns the time service ended'''
+		return self._servend
+ 
+	def custspend(self):
+		'''Returns the time customer spends in system'''
+		return self._custspend
+
+	def idle(self):
+		'''Returns the idle time of server'''
+		return self._idle
+
+		# Required variables
+		self._arrival, self._preservstart, self._servstart = [], [0], []
+		self._queue, self._servend, self._custspend, self._idle = [], [], [], [0]
+
+
+class simulation(randomsim):
+	def __init__(self, *args):
+		self.stop, self.amount = 10, random.randint(2,20)
+		self._intarrival, self._service = [], []
+
+		if len(args) == 1:
+			self._intarrival = args[0]
+			[self._service.append(random.randint(1, self.stop)) for i in range(len(args[0]))]
+
+
+		elif len(args) == 2:
+			self._intarrival = args[0]
+			self._service = args[1]
+
+		else:
+			raise ValueError("Arguments must be 1 or 2")
+		if self._intarrival[0] < 0:
+			self._intarrival[0] = 0
+		
+		# Required variables
+		self._arrival, self._preservstart, self._servstart = [], [0], []
+		self._queue, self._servend, self._custspend, self._idle = [], [], [], [0]
+
+		def getarrive_(self):
+			'''Returns arrival time'''
+			increase = 0
+			for i in self._intarrival:
+				increase +=i
+				self._arrival.append(increase)
+			return self._arrival
+
+		def servbegins_(self):
+			'''Returns time when service begin'''
+			increase = 0
+			for i in range(len(self._service)):
+				increase += self._service[i]
+				self._preservstart.append(increase)
+			self._preservstart.pop()
+			return self._preservstart
+
+		def servstops_(self):
+			'''Returns time when service ends (not to be used)'''
+			z = 0
+			for x in self._preservstart:
+				for y in self._service:
+					z +=y
+					self._servend.append(z+x)
+			return self._servend
+
+		#Please maintain order if you are editing the code!
+		# Calling functions
+		getarrive_(self)	#Returns arrival time
+		servstops_(self)	#Returns time when service ends (not final result)
+		servbegins_(self)	#Returns time when servce begin
+
+		def get_servend_(self):
+			'''Retuns time when service ends'''
+			for x in range(len(self._preservstart)):
+				self._servend[x] = self._preservstart[x] + self._service[x]
+				s = 1
+				while s < len(self._preservstart):
+					if self._preservstart[s] < max(self._arrival[s], self._servend[x]):
+						self._preservstart[s] = max(self._arrival[s], self._servend[x])
+					s+=1 
+			return self._servend
+
+		# Method used to calculate the rest of the data like
+		#time when service begins
+		#wait time in queue, (_queue)
+		#time customer spent in the system (_custspend)
+		def otherresults(self, list1, list2, list3):
+			''' Stores and return the value of (list2 - list3) in list1 '''
+			for x in range(len(list2)):
+				list1.append(list2[x] - list3[x]) 
+			if list1[0] < 0:
+				list1[0] = 0
+
+		def idletime_(self):
+			'''Returns the idle time of server'''
+			x,y = 0,1
+			while y < len(self._servend):
+				(self._idle).append(self._servstart[y] - self._servend[x])
+				x+=1
+				y+=1
+			return self._idle
+
+		# Calling other methods
+		get_servend_(self)
+		otherresults(self, self._servstart, self._servend, self._service) 
+		otherresults(self, self._queue, self._servstart, self._arrival) 
+		otherresults(self, self._custspend, self._servend, self._arrival)
+		idletime_(self)
+
+	#simulation class will inherit methods from the randomsim class
