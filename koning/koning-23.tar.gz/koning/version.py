@@ -1,0 +1,20 @@
+# koning/version.py
+#
+#
+
+""" echo version. """
+
+## IMPORTS
+
+
+from kern.kernel import kernel
+
+from koning import __version__
+
+## CMNDS
+
+def version(event): event.reply("KONING #%s - %s" % (__version__, TXT.strip()))
+
+kernel.register("version", version)
+
+TXT = """ Antipsychotica zijn dodelijk. """
