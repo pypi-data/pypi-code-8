@@ -1,0 +1,41 @@
+from setuptools import setup, Extension
+from glob import glob
+
+library = ('primesieve', dict(
+    sources=glob("lib/primesieve/src/primesieve/*.cpp"),
+    include_dirs=["lib/primesieve/include"],
+    language="c++",
+    ))
+
+if glob("primesieve/*.pyx"):
+    from Cython.Build import cythonize
+else:
+    # fallback to compiled cpp
+    cythonize = None
+
+extension = Extension(
+        "primesieve",
+        ["primesieve/primesieve.pyx"] if cythonize else ["primesieve/primesieve.cpp"],
+        include_dirs = ["lib/primesieve/include"],
+        language="c++",
+        )
+
+ext_modules = cythonize(extension) if cythonize else [extension]
+
+setup(
+    name='primesieve',
+    version="0.0.1",
+    url = "https://github.com/hickford/primesieve-python",
+    license = "MIT",
+    libraries = [library],
+    ext_modules = ext_modules,
+    classifiers=[
+    'Programming Language :: Python :: 2',
+    'Programming Language :: Python :: 2.6',
+    'Programming Language :: Python :: 2.7',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.2',
+    'Programming Language :: Python :: 3.3',
+    'Programming Language :: Python :: 3.4',
+    ],
+)
