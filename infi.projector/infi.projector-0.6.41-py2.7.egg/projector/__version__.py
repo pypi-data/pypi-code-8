@@ -1,0 +1,10 @@
+__version__ = "0.6.41"
+__git_commiter_name__ = "Tomer Galun"
+__git_commiter_email__ = "tomerg@infinidat.com"
+__git_branch__ = '(HEAD detached at v0.6.41)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = 'd5e952d009f5800c10370f2c087ed449c8bf6365'
+__git_head_subject__ = "TRIVIAL don't create directory if repository clone failed"
+__git_head_message__ = ''
+__git_dirty_diff__ = ''
