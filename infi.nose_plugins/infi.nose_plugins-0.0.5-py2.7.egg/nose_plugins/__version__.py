@@ -1,0 +1,11 @@
+__version__ = "0.0.5"
+__git_commiter_name__ = "Arnon Yaari"
+__git_commiter_email__ = "arnony@infinidat.com"
+__git_branch__ = '(HEAD detached at v0.0.5)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = 'c44bd1c68591ae4267aa3e4d44253f9b4380898e'
+__git_head_subject__ = 'update buildout.cfg and disable html plugin'
+__git_head_message__ = ''
+__git_dirty_diff__ = ''
+__git_commit_date__ = '2015-06-30 16:10:34'
