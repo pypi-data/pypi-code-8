@@ -1,0 +1,10 @@
+__version__ = "0.2.3"
+__git_commiter_name__ = "Guy Rozendorn"
+__git_commiter_email__ = "guy@rzn.co.il"
+__git_branch__ = '(HEAD detached at v0.2.3)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = '8b6fe8c9b17ead3dfeec2422cf1156bc893937ae'
+__git_head_subject__ = 'TRIVIAL checking commit'
+__git_head_message__ = ''
+__git_dirty_diff__ = ''
