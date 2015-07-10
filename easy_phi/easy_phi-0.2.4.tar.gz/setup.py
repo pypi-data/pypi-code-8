@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from setuptools import setup
+
+VERSION = "0.2.4"
+LICENSE = "GPL v3.0"
+PROJECT = "easy_phi"
+
+# options reference: https://docs.python.org/2/distutils/
+setup(
+    name=PROJECT,
+    packages=[PROJECT, 'static'],
+    version=VERSION,
+    license=LICENSE,
+    description='Easy Phi project web application',
+    long_description=open('README.md').read(),
+
+    author='Team Quantum',
+    author_email='shadeless@ya.ru',
+    url='https://github.com/QuantumCMU/easy_phi_API',
+    download_url='https://github.com/QuantumCMU/easy_phi_API/tarball/'+VERSION,
+    keywords=['measurement equipment', 'SCPI', 'udev', 'TMC', 'VISA'],
+    classifiers=(  # see https://pypi.python.org/pypi?%3Aaction=list_classifiers
+        "Programming Language :: Python :: 2",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "Operating System :: POSIX :: Linux",
+        "Development Status :: 1 - Planning",
+        "Intended Audience :: Science/Research",
+        "Topic :: Scientific/Engineering :: "
+        "Interface Engine/Protocol Translator",
+    ),
+    entry_points = {
+        'console_scripts': ['easy_phi = easy_phi.app:main']
+    },
+    data_files=[
+        ('/etc', ['scripts/easy_phi.conf']),
+        ('/etc/udev/rules.d', ['scripts/99-easy_phi-modules.rules']),
+        ('/etc/easy_phi', ['scripts/modules_conf_patches.conf',
+                           'scripts/widgets.conf']),
+    ],
+    package_data={
+        'static': ['*.html', 'css/*', 'js/*'],
+    },
+    install_requires=['tornado', 'pyudev', 'pyserial', 'dicttoxml'],
+    # TODO: add unit tests
+)
